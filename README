@@ -1,0 +1,18 @@
+Proof of concept to show use of cross-container flock
+
+To test with just docker:
+
+make image
+./test
+
+The above will start 3 containers simultaneously. Each of them will
+flock the same temp directory and then sleep for 10 seconds.  The
+containers should finish in about 10, 20 and 30 seconds, demonstrating
+correct locking behavior.
+
+To test with Kubernetes:
+
+kubectl apply -f job.yaml
+
+After 30 seconds, examine the logs of the test-flock-* pods to verify
+the behavior.
