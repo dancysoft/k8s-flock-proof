@@ -1,0 +1,28 @@
+#!/bin/bash
+
+set -eu -o pipefail
+
+IMAGE=dancysoft/local/flock-proof:1
+
+nodepath=$(mktemp -d)
+trap "rmdir $nodepath" EXIT
+
+echo starting 3 containers
+
+ids=
+for n in $(seq 3); do
+    id=$(docker run -d -v $nodepath:/tmp/nodepath $IMAGE)
+    ids="$ids $id"
+done
+
+echo waiting for 3 containers to terminate
+docker wait $ids
+
+for id in $ids; do
+    echo container $id logs:
+    docker logs $id
+    echo
+done
+
+echo cleaning up
+docker rm $ids

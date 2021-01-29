@@ -1,0 +1,31 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: test-flock
+
+spec:
+  template:
+    spec:
+      containers:
+        - name: test-flock1
+          image: registry.hq.dancysoft.com/local/flock-proof:1
+          volumeMounts:
+            - name: nodepath
+              mountPath: /tmp/nodepath
+        - name: test-flock2
+          image: registry.hq.dancysoft.com/local/flock-proof:1
+          volumeMounts:
+            - name: nodepath
+              mountPath: /tmp/nodepath
+        - name: test-flock3
+          image: registry.hq.dancysoft.com/local/flock-proof:1
+          volumeMounts:
+            - name: nodepath
+              mountPath: /tmp/nodepath
+      restartPolicy: Never
+      volumes:
+        - name: nodepath
+          hostPath:
+            path: /tmp/nodepath
+            type: DirectoryOrCreate
